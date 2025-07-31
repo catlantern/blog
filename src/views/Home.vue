@@ -146,7 +146,7 @@ export default {
     
     // 分页相关
     const currentPage = ref(1)
-    const pageSize = ref(5) // 每页显示5篇文章
+    const pageSize = ref(4) // 每页显示4篇文章
     
     // 分页后的文章列表
     const paginatedPosts = computed(() => {

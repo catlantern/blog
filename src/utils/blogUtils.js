@@ -1,6 +1,29 @@
 import MarkdownIt from 'markdown-it';
+import { markdownItTable } from 'markdown-it-table';
+import hljs from 'highlight.js';
+// 移除默认样式导入，完全使用自定义样式
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return '<pre class="hljs"><code>' +
+               hljs.highlight(str, { language: lang }).value +
+               '</code></pre>';
+      } catch (__) {}
+    }
+
+    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+  },
+  html: true,
+  xhtmlOut: true,
+  breaks: true,
+  linkify: true,
+  typographer: true
+});
+
+// 启用表格插件
+md.use(markdownItTable);
 
 // 获取文章列表
 export const getArticleList = async () => {

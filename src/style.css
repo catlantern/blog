@@ -70,3 +70,22 @@ body {
   color: #999;
   font-size: 0.9em;
 }
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+table, th, td {
+  border: 1px solid #ccc;
+}
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+}
+
+/* Highlight.js Styles */
+.hljs {
+  padding: 1.0rem;
+}

@@ -30,6 +30,9 @@ jobs:
       env:
         NODE_ENV: production
 
+    - name: 修复githubPages的404错误
+      run: cp dist/index.html dist/404.html
+
     - name: 部署到githubPages
       uses: JamesIves/github-pages-deploy-action@v4
       with:

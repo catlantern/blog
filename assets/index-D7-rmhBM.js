@@ -93,6 +93,8 @@ https://github.com/highlightjs/highlight.js/issues/2277`),An=Qe,on=At),Yt===void
                 </div>`}catch{}return`<div class="code-block-wrapper">
               <div class="code-header">
                 <span class="language-indicator">text</span>
+                <span class="copy-button">复制</span>
+                <span class="full-scrren-button">全屏</span>
               </div>
               <div class="code-content">
                 <pre class="line-numbers">${n.split(`

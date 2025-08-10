@@ -81,4 +81,28 @@ export default {
     padding: 1rem;
   }
 }
+
+/* Markdown行内代码样式 */
+.markdown-content :deep(code) {
+  background-color: #f0f0f0;
+  color: #333333;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.85em;
+}
+
+/* Markdown代码块样式 */
+.markdown-content :deep(pre) {
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.markdown-content :deep(pre code) {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
 </style>

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getArticleBySlug, renderMarkdown } from '../utils/blogUtils'
 
@@ -26,6 +26,73 @@ export default {
       router.push('/')
     }
     
+    // 复制代码功能
+    const copyCode = (button) => {
+      // 获取代码内容
+      const codeBlock = button.closest('.code-block-wrapper')
+      const codeContainer = codeBlock.querySelector('.code-container code')
+      const codeText = codeContainer.innerText
+      
+      // 复制到剪贴板
+      navigator.clipboard.writeText(codeText).then(() => {
+        // 显示成功状态
+        const originalText = button.innerText
+        button.innerText = '已复制'
+        button.classList.add('copied')
+        
+        // 2秒后恢复原始状态
+        setTimeout(() => {
+          button.innerText = originalText
+          button.classList.remove('copied')
+        }, 2000)
+      }).catch(err => {
+        console.error('复制失败:', err)
+      })
+    }
+    
+    // 全屏显示功能
+    const toggleFullscreen = (button) => {
+      const codeBlock = button.closest('.code-block-wrapper')
+      
+      if (!document.fullscreenElement) {
+        // 进入全屏
+        if (codeBlock.requestFullscreen) {
+          codeBlock.requestFullscreen()
+        } else if (codeBlock.webkitRequestFullscreen) {
+          codeBlock.webkitRequestFullscreen()
+        } else if (codeBlock.msRequestFullscreen) {
+          codeBlock.msRequestFullscreen()
+        }
+        button.innerText = '退出全屏'
+      } else {
+        // 退出全屏
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        }
+        button.innerText = '全屏'
+      }
+    }
+    
+    // 处理代码块按钮点击事件
+    const handleCodeBlockEvents = () => {
+      // 使用事件委托处理动态添加的元素
+      document.addEventListener('click', (event) => {
+        // 处理复制按钮点击
+        if (event.target.classList.contains('copy-button')) {
+          copyCode(event.target)
+        }
+        
+        // 处理全屏按钮点击
+        if (event.target.classList.contains('full-scrren-button')) {
+          toggleFullscreen(event.target)
+        }
+      })
+    }
+    
     onMounted(async () => {
       try {
         const slug = props.slug || route.params.slug
@@ -33,6 +100,10 @@ export default {
         
         if (markdownContent) {
           renderedMarkdown.value = renderMarkdown(markdownContent)
+          // 等待DOM更新后绑定事件
+          nextTick(() => {
+            handleCodeBlockEvents()
+          })
         } else {
           renderedMarkdown.value = '<p>文章未找到</p>'
         }
@@ -53,12 +124,16 @@ export default {
 <style scoped>
 .blog-post {
   max-width: 1200px;
-  margin: auto auto;
+  margin: 0 auto;
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* 控制按钮和卡片之间的间距 */
 }
 
 .blog-post ::v-deep(.el-button) {
-  margin-bottom: 2rem;
+  align-self: flex-start; /* 按钮左对齐 */
+  margin: 0; /* 移除margin，使用gap控制间距 */
   transition: all 0.3s;
 }
 
@@ -73,36 +148,149 @@ export default {
   overflow: hidden;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   max-width: 100%;
-  width: 1200px;
+  width: 100%; /* 改为100%以适应容器 */
+  flex: 1; /* 占据剩余空间 */
 }
 
 @media (max-width: 768px) {
   .blog-post {
     padding: 1rem;
+    gap: 1rem; /* 响应式间距 */
   }
 }
 
 /* Markdown行内代码样式 */
 .markdown-content :deep(code) {
-  background-color: #f0f0f0;
-  color: #333333;
-  padding: 0.2em 0.4em;
+  background-color: #f7c8c8;
   border-radius: 4px;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 0.85em;
 }
 
 /* Markdown代码块样式 */
-.markdown-content :deep(pre) {
+.markdown-content :deep(.code-block-wrapper) {
   background-color: #f0f0f0;
   border-radius: 6px;
-  padding: 1rem;
-  overflow: auto;
+  margin: 1rem 0; /* 代码块上下间距 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.markdown-content :deep(pre code) {
+.markdown-content :deep(.code-header) {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 两端对齐 */
+  margin: 0;
+  padding: 6px 12px;
+  color: #555;
+  border-bottom: 1px solid #ddd;
+  background-color: #e8e8e8;
+  min-height: 0;
+}
+
+.markdown-content :deep(.language-indicator) {
+  font-weight: 600;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+/* 复制按钮样式 */
+.markdown-content :deep(.copy-button) {
+  cursor: pointer;
+  padding: 2px 8px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+  transition: all 0.3s;
+  margin-left: auto; /* 推到右边 */
+  margin-right: 8px; /* 与全屏按钮的间距 */
+}
+
+/* 全屏按钮样式 */
+.markdown-content :deep(.full-scrren-button) {
+  cursor: pointer;
+  padding: 2px 8px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+/* 按钮悬停效果 */
+.markdown-content :deep(.copy-button:hover),
+.markdown-content :deep(.full-scrren-button:hover) {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+/* 按钮激活状态 */
+.markdown-content :deep(.copy-button.copied) {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.markdown-content :deep(.code-content) {
+  display: flex;
+  margin: 0;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.markdown-content :deep(.line-numbers) {
+  background-color: #e8e8e8;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  min-width: 10px;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  color: #777;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.85em;
+  line-height: 1.5;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.markdown-content :deep(.code-container) {
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  flex: 1;
+  overflow-x: auto;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.markdown-content :deep(.code-container code) {
   background-color: transparent;
   color: inherit;
   padding: 0;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.85em;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* 修复拼写错误 */
+.markdown-content :deep(.code-content) {
+  display: flex;
+  margin: 0;
+  overflow-x: auto;
 }
 </style>
+

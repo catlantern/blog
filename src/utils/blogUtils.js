@@ -5,15 +5,45 @@ import hljs from 'highlight.js';
 
 const md = new MarkdownIt({
   highlight: function (str, lang) {
+    const normalizedStr = str.endsWith('\n') ? str.slice(0, -1) : str;
+    
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return '<pre class="hljs"><code>' +
-               hljs.highlight(str, { language: lang }).value +
-               '</code></pre>';
+        // 获取高亮后的代码
+        const highlightedCode = hljs.highlight(normalizedStr, { language: lang }).value;
+        
+        // 生成行号
+        const lines = normalizedStr.split('\n');
+        const lineNumbers = lines.map((_, index) => `<span class="line-number">${index + 1}</span>`).join('');
+        
+        // 创建新的代码块结构
+        return `<div class="code-block-wrapper">
+                  <div class="code-header">
+                    <span class="language-indicator">${lang}</span>
+                    <span class="copy-button">复制</span>
+                    <span class="full-scrren-button">全屏</span>
+                  </div>
+                  <div class="code-content">
+                    <pre class="line-numbers">${lineNumbers}</pre>
+                    <pre class="hljs code-container"><code>${highlightedCode}</code></pre>
+                  </div>
+                </div>`;
       } catch (__) {}
     }
 
-    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+    // 无语言指定的情况
+    const lines = normalizedStr.split('\n');
+    const lineNumbers = lines.map((_, index) => `<span class="line-number">${index + 1}</span>`).join('');
+    
+    return `<div class="code-block-wrapper">
+              <div class="code-header">
+                <span class="language-indicator">text</span>
+              </div>
+              <div class="code-content">
+                <pre class="line-numbers">${lineNumbers}</pre>
+                <pre class="hljs code-container"><code>${md.utils.escapeHtml(normalizedStr)}</code></pre>
+              </div>
+            </div>`;
   },
   html: true,
   xhtmlOut: true,
@@ -21,6 +51,7 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true
 });
+
 
 // 启用表格插件
 md.use(markdownItTable);

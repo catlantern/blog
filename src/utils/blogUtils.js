@@ -1,7 +1,9 @@
 import MarkdownIt from 'markdown-it';
 import { markdownItTable } from 'markdown-it-table';
+import markdownItTaskLists from 'markdown-it-task-lists';
+import markdownItFootnote from 'markdown-it-footnote';
+import markdownItKatex from 'markdown-it-katex';
 import hljs from 'highlight.js';
-// 移除默认样式导入，完全使用自定义样式
 
 const md = new MarkdownIt({
   highlight: function (str, lang) {
@@ -58,7 +60,14 @@ const md = new MarkdownIt({
 // 启用表格插件
 md.use(markdownItTable);
 
-// 获取文章列表
+// 启用任务列表插件
+md.use(markdownItTaskLists);
+
+// 启用脚注插件
+md.use(markdownItFootnote);
+
+// 启用数学公式插件
+md.use(markdownItKatex);
 export const getArticleList = async () => {
   try {
     const res = await fetch('/blog/articles/index.json');

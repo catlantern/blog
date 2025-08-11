@@ -292,5 +292,80 @@ export default {
   margin: 0;
   overflow-x: auto;
 }
+
+/* Markdown引用块样式 */
+.markdown-content :deep(blockquote) {
+  margin: 1rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid #409eff;
+  background-color: #f5f7fa;
+  color: #606266;
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+}
+
+.markdown-content :deep(blockquote p) {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.markdown-content :deep(blockquote p:first-child) {
+  margin-top: 0;
+}
+
+.markdown-content :deep(blockquote p:last-child) {
+  margin-bottom: 0;
+}
+
+/* 嵌套引用块样式 */
+.markdown-content :deep(blockquote blockquote) {
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid #67c23a;
+  background-color: #f0f9eb;
+}
+
+.markdown-content :deep(blockquote blockquote blockquote) {
+  border-left: 2px solid #e6a23c;
+  background-color: #fdf6ec;
+}
+
+/* 任务列表样式 */
+.markdown-content :deep(.contains-task-list) {
+  padding-left: 0;
+  list-style: none;
+}
+
+.markdown-content :deep(.task-list-item) {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content :deep(.task-list-item input[type="checkbox"]) {
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.markdown-content :deep(.task-list-item p) {
+  margin: 0;
+  flex: 1;
+}
+
+.markdown-content :deep(.task-list-item.checked) {
+  color: #909399;
+}
+
+.markdown-content :deep(.task-list-item.checked p) {
+  text-decoration: line-through;
+}
+
+.markdown-content :deep(.katex-html) {
+  display: none !important;
+}
+
 </style>
 

@@ -3,18 +3,21 @@
         "slug": "1",
         "title": "你好 Markdown",
         "tag": "work",
+        "excerpt": "文章摘要",
         "date": "2025-07-30"
     },
     {
         "slug": "2",
         "title": "Vue3 入门",
         "tag": "work",
+        "excerpt": "文章摘要",
         "date": "2025-07-30"
     },
     {
         "slug": "3",
         "title": "Vue4 入门",
         "tag": "test",
+        "excerpt": "文章摘要",
         "date": "2025-07-30"
     }
 ]

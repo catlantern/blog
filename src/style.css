@@ -1,0 +1,91 @@
+/* Global Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f7fa;
+}
+
+/* Header Styles */
+.el-header {
+  background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+  color: white;
+  padding: 1.5rem 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+/* Main Content Styles */
+.el-main {
+  padding-top: 60px; /* Adjust padding to account for fixed header */
+  padding: 2rem;
+}
+
+/* Footer Styles */
+.el-footer {
+  background-color: #f5f7fa;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* Home Page Styles */
+.home {
+  padding: 2rem;
+}
+
+.search-container {
+  margin-bottom: 2rem;
+}
+
+.tag-filter {
+  margin-bottom: 2rem;
+}
+
+.tag-item {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-card {
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.post-meta {
+  margin-top: 0.5rem;
+}
+
+.post-date {
+  color: #999;
+  font-size: 0.9em;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+table, th, td {
+  border: 1px solid #ccc;
+}
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+}
+
+/* Highlight.js Styles */
+.hljs {
+  padding: 1.0rem;
+}

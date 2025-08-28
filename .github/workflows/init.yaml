@@ -1,46 +1,61 @@
 name: 打包vue项目到githubPages
 on:
   push:
-    branches: [ master ]  
+    branches: [ master ]
   pull_request:
-    branches: [ master ]  
+    branches: [ master ]
 
 jobs:
+  cleanup-deployments:
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+      contents: read
+
+    steps:
+      - name: Delete GitHub Pages deployments history
+        uses: strumwolf/delete-deployment-environment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: github-pages
+          onlyRemoveDeployments: true
+
   build-and-deploy:
+    needs: cleanup-deployments
     runs-on: ubuntu-latest
     
     permissions:
       contents: write
     
     steps:
-    - name: 读取仓库内容
-      uses: actions/checkout@v4
-      with:
-        ref: master  
+      - name: 读取仓库内容
+        uses: actions/checkout@v4
+        with:
+          ref: master
 
-    - name: 安装nodeJs依赖
-      uses: actions/setup-node@v3
-      with:
-        node-version: '22'  
+      - name: 安装nodeJs依赖
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
 
-    - name: 安装pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+      - name: 安装pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
-    - name: 安装依赖
-      run: pnpm install --prefer-frozen-lockfile || pnpm install
+      - name: 安装依赖
+        run: pnpm install --prefer-frozen-lockfile || pnpm install
 
-    - name: 构建项目
-      run: pnpm build
-      env:
-        NODE_ENV: production
+      - name: 构建项目
+        run: pnpm build
+        env:
+          NODE_ENV: production
 
-    - name: 修复githubPages的404错误
-      run: cp dist/index.html dist/404.html
+      - name: 修复githubPages的404错误
+        run: cp dist/index.html dist/404.html
 
-    - name: 部署到githubPages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        branch: gh-pages
-        folder: dist
+      - name: 部署到githubPages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist

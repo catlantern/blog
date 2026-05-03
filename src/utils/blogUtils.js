@@ -11,14 +11,10 @@ const md = new MarkdownIt({
     
     if (lang && hljs.getLanguage(lang)) {
       try {
-        // 获取高亮后的代码
         const highlightedCode = hljs.highlight(normalizedStr, { language: lang }).value;
-        
-        // 生成行号
         const lines = normalizedStr.split('\n');
         const lineNumbers = lines.map((_, index) => `<span class="line-number">${index + 1}</span>`).join('');
         
-        // 创建新的代码块结构
         return `<div class="code-block-wrapper">
                   <div class="code-header">
                     <span class="language-indicator">${lang}</span>
@@ -33,7 +29,6 @@ const md = new MarkdownIt({
       } catch (__) {}
     }
 
-    // 无语言指定的情况
     const lines = normalizedStr.split('\n');
     const lineNumbers = lines.map((_, index) => `<span class="line-number">${index + 1}</span>`).join('');
     
@@ -56,23 +51,21 @@ const md = new MarkdownIt({
   typographer: true
 });
 
-
-// 启用表格插件
 md.use(markdownItTable);
-
-// 启用任务列表插件
 md.use(markdownItTaskLists);
-
-// 启用脚注插件
 md.use(markdownItFootnote);
-
-// 启用数学公式插件
 md.use(markdownItKatex);
+
+let articlesCache = null;
+
 export const getArticleList = async () => {
+  if (articlesCache) {
+    return articlesCache;
+  }
   try {
     const res = await fetch('/blog/articles/index.json');
-    const articles = await res.json();
-    return articles.map(article => ({
+    articlesCache = await res.json();
+    return articlesCache.map(article => ({
       slug: article.slug,
       title: article.title,
       excerpt: article.excerpt,
@@ -85,7 +78,6 @@ export const getArticleList = async () => {
   }
 }
 
-// 根据slug获取文章内容
 export const getArticleBySlug = async (slug) => {
   try {
     const res = await fetch(`/blog/articles/${slug}.md`);
@@ -100,7 +92,101 @@ export const getArticleBySlug = async (slug) => {
   }
 }
 
-// 渲染Markdown
 export const renderMarkdown = (markdown) => {
   return md.render(markdown);
+}
+
+export const extractHeadings = (markdown) => {
+  const headings = [];
+  const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+  let match;
+  
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    const level = match[1].length;
+    const text = match[2].trim();
+    const id = text.toLowerCase()
+      .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    
+    headings.push({
+      level,
+      text,
+      id: `heading-${id}-${headings.length}`
+    });
+  }
+  
+  return headings;
+}
+
+export const getAdjacentArticles = async (currentSlug) => {
+  const articles = await getArticleList();
+  const currentIndex = articles.findIndex(article => article.slug === currentSlug);
+  
+  return {
+    prev: currentIndex > 0 ? articles[currentIndex - 1] : null,
+    next: currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null
+  };
+}
+
+export const getArticlesByTag = async (tag) => {
+  const articles = await getArticleList();
+  return articles.filter(article => article.tag === tag);
+}
+
+export const getAllTags = async () => {
+  const articles = await getArticleList();
+  const tags = [...new Set(articles.map(article => article.tag).filter(Boolean))];
+  return tags;
+}
+
+export const getTagStats = async () => {
+  const articles = await getArticleList();
+  const tagMap = {};
+  
+  articles.forEach(article => {
+    if (article.tag) {
+      if (!tagMap[article.tag]) {
+        tagMap[article.tag] = 0;
+      }
+      tagMap[article.tag]++;
+    }
+  });
+  
+  return Object.entries(tagMap).map(([name, count]) => ({ name, count }));
+}
+
+export const getCurrentArticleInfo = async (slug) => {
+  const articles = await getArticleList();
+  return articles.find(article => article.slug === slug);
+}
+
+export const addArticleToIndex = async (articleData) => {
+  try {
+    const articles = await getArticleList();
+    articles.push({
+      slug: articleData.slug,
+      title: articleData.title,
+      tag: articleData.tag,
+      excerpt: articleData.excerpt,
+      date: articleData.date || new Date().toISOString().split('T')[0]
+    });
+    
+    articlesCache = null;
+    return { success: true, message: '文章索引已更新' };
+  } catch (error) {
+    console.error('Error adding article:', error);
+    return { success: false, message: '添加文章失败' };
+  }
+}
+
+export const generateSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .substring(0, 50);
 }

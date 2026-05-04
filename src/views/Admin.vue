@@ -263,6 +263,7 @@
                     </div>
                   </div>
                   <div class="article-item-actions">
+                    <el-button size="small" @click="previewArticle(article.slug)" :loading="previewingSlug === article.slug">预览</el-button>
                     <el-button size="small" type="primary" @click="openEditDialog(article)">编辑</el-button>
                     <el-popconfirm
                       :title="`确定删除文章「${article.title}」吗？此操作不可恢复！`"
@@ -348,6 +349,10 @@
         <el-button type="primary" @click="updateArticleMeta" :disabled="!editForm.title || !editForm.tag">保存</el-button>
       </template>
     </el-dialog>
+
+    <el-dialog v-model="showPreviewDialog" :title="previewTitle" width="800px" top="5vh" destroy-on-close>
+      <div class="preview-dialog-content" v-html="previewHtml"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -387,6 +392,10 @@ export default {
     const selectedArticles = ref([])
     const showEditDialog = ref(false)
     const editForm = ref({ slug: '', title: '', tag: '', excerpt: '', date: '' })
+    const showPreviewDialog = ref(false)
+    const previewTitle = ref('')
+    const previewHtml = ref('')
+    const previewingSlug = ref('')
     
     const articleForm = ref({
       title: '',
@@ -764,6 +773,26 @@ export default {
       }
     }
     
+    const previewArticle = async (slug) => {
+      previewingSlug.value = slug
+      try {
+        const res = await fetch(`${API_URL}/api/articles/${encodeURIComponent(slug)}/content`)
+        const data = await res.json()
+        if (data.success) {
+          const article = articleList.value.find(a => a.slug === slug)
+          previewTitle.value = article ? article.title : slug
+          previewHtml.value = renderMarkdown(data.content)
+          showPreviewDialog.value = true
+        } else {
+          alert('加载预览失败: ' + data.error)
+        }
+      } catch (error) {
+        alert('加载预览失败: ' + error.message)
+      } finally {
+        previewingSlug.value = ''
+      }
+    }
+    
     return {
       fileName,
       articleContent,
@@ -788,6 +817,10 @@ export default {
       selectedArticles,
       showEditDialog,
       editForm,
+      showPreviewDialog,
+      previewTitle,
+      previewHtml,
+      previewingSlug,
       articleForm,
       isFormValid,
       renderedPreview,
@@ -807,7 +840,8 @@ export default {
       clearArticleSelection,
       batchDeleteArticles,
       openEditDialog,
-      updateArticleMeta
+      updateArticleMeta,
+      previewArticle
     }
   }
 }
@@ -1132,6 +1166,50 @@ export default {
 .success-icon {
   font-size: 4rem;
   color: #67c23a;
+}
+
+.preview-dialog-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 1rem;
+  line-height: 1.8;
+}
+
+.preview-dialog-content :deep(h1),
+.preview-dialog-content :deep(h2),
+.preview-dialog-content :deep(h3) {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #303133;
+}
+
+.preview-dialog-content :deep(p) {
+  margin: 0.5rem 0;
+  color: #606266;
+}
+
+.preview-dialog-content :deep(img) {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.preview-dialog-content :deep(pre) {
+  background: #f5f7fa;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.preview-dialog-content :deep(code) {
+  background: #f7c8c8;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.preview-dialog-content :deep(pre code) {
+  background: transparent;
+  padding: 0;
 }
 
 @media (max-width: 900px) {

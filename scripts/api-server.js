@@ -48,6 +48,30 @@ function imageToBase64(imagePath) {
 function processMarkdownContent(content, mdDir) {
   let processed = content;
 
+  const obsidianImageRegex = /!\[\[([^\]]+)\]\]/g;
+  processed = processed.replace(obsidianImageRegex, (match, filePath) => {
+    let resolvedPath;
+    if (path.isAbsolute(filePath)) {
+      resolvedPath = filePath;
+    } else {
+      resolvedPath = path.resolve(mdDir, filePath);
+    }
+
+    const ext = path.extname(resolvedPath).toLowerCase();
+    if (IMAGE_EXTENSIONS.has(ext)) {
+      const base64 = imageToBase64(resolvedPath);
+      if (base64) {
+        console.log(`  Obsidian图片转base64: ${filePath} -> base64 (${Math.round(base64.length / 1024)}KB)`);
+        return `![${path.basename(resolvedPath)}](${base64})`;
+      } else {
+        console.log(`  Obsidian图片未找到: ${resolvedPath}`);
+        return match;
+      }
+    }
+
+    return `**\`${filePath}\`**`;
+  });
+
   const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
   processed = processed.replace(imageRegex, (match, altText, imagePath) => {
     if (imagePath.startsWith('data:') || imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
@@ -244,6 +268,23 @@ app.delete('/api/articles/:slug', (req, res) => {
       success: false, 
       error: error.message 
     });
+  }
+});
+
+app.get('/api/articles/:slug/content', (req, res) => {
+  try {
+    const { slug } = req.params;
+    const mdFilePath = path.join(articlesDir, `${slug}.md`);
+    
+    if (!fs.existsSync(mdFilePath)) {
+      return res.status(404).json({ success: false, error: `文章文件不存在: ${slug}.md` });
+    }
+    
+    const content = fs.readFileSync(mdFilePath, 'utf-8');
+    res.json({ success: true, content });
+  } catch (error) {
+    console.error('读取文章内容失败:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

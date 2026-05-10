@@ -1,5 +1,12 @@
 [
   {
+    "slug": "cybersecurity-daily-briefing-2026-05-10",
+    "title": "网络安全资讯日报 – 2026年5月10日",
+    "tag": "每日情报",
+    "excerpt": "Linux内核CopyFail漏洞PoC公开引发加密行业警报；Windows Shell欺骗漏洞CVE-2026-32202已在野利用；NVIDIA GeForce Now遭ShinyHunters入侵数据泄露",
+    "date": "2026-05-10"
+  },
+  {
     "slug": "cybersecurity-daily-brief-2026-05-09",
     "title": "网络安全资讯日报 – 2026年5月9日",
     "tag": "每日情报",

@@ -1,5 +1,12 @@
 [
   {
+    "slug": "daily-cybersecurity-briefing-2026-05-15",
+    "title": "📅 网络安全资讯日报 – 2026年5月15日",
+    "tag": "每日情报",
+    "excerpt": "NGINX曝出潜伏18年的CVSS 9.2高危RCE漏洞CVE-2026-42945，影响全球近三分之一服务器；微软发布5月安全更新修复138个漏洞含30个严重；谷歌首次发现黑客利用AI开发零日漏洞攻击工具。",
+    "date": "2026-05-15"
+  },
+  {
     "slug": "daily-cybersecurity-briefing-2026-05-14",
     "title": "网络安全资讯日报 – 2026年5月14日",
     "tag": "每日情报",

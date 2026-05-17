@@ -1,5 +1,12 @@
 [
   {
+    "slug": "cybersecurity-daily-briefing-2026-05-17",
+    "title": "网络安全资讯日报 – 2026年5月17日",
+    "tag": "每日情报",
+    "excerpt": "NGINX曝潜伏18年CVE-2026-42945高危漏洞(CVSS 9.2)；富士康美国工厂遭勒索攻击致8TB数据泄露；谷歌首次发现AI驱动零日漏洞攻击；微软5月补丁修复138个CVE。",
+    "date": "2026-05-17"
+  },
+  {
     "slug": "cybersecurity-daily-briefing-2026-05-16",
     "title": "网络安全资讯日报 – 2026年5月16日",
     "tag": "每日情报",

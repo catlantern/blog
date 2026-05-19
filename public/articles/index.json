@@ -1,5 +1,12 @@
 [
   {
+    "slug": "cybersecurity-daily-briefing-2026-05-19",
+    "title": "网络安全资讯日报 – 2026年5月19日",
+    "tag": "每日情报",
+    "excerpt": "微软Exchange零日漏洞CVE-2026-42897在野利用持续发酵；MiniPlasma零日漏洞PoC公开，全补丁Windows 11仍可提权至SYSTEM；CISA将思科SD-WAN满分漏洞(CVSS 10.0)列入KEV清单。",
+    "date": "2026-05-19"
+  },
+  {
     "slug": "cybersecurity-daily-briefing-2026-05-18",
     "title": "网络安全资讯日报 – 2026年5月18日",
     "tag": "每日情报",

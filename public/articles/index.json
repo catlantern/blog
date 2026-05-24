@@ -1,5 +1,12 @@
 [
   {
+    "slug": "daily-cybersecurity-briefing-2026-05-24",
+    "title": "网络安全资讯日报 – 2026年5月24日",
+    "tag": "每日情报",
+    "excerpt": "本期重点：微软修复两项Defender在野利用零日漏洞；NGINX Rift(CVE-2026-42945)高危漏洞遭黑客利用；Linux内核3周内曝出第4个高危漏洞；工信部通报31款违规APP。",
+    "date": "2026-05-24"
+  },
+  {
     "slug": "cybersecurity-daily-briefing-2026-05-23",
     "title": "📅 网络安全资讯日报 – 2026年05月23日",
     "tag": "每日情报",

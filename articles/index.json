@@ -1,5 +1,12 @@
 [
   {
+    "slug": "daily-cybersecurity-briefing-2026-05-25",
+    "title": "网络安全资讯日报 – 2026年5月25日",
+    "tag": "每日情报",
+    "excerpt": "微软修复两项Defender零日漏洞（CVE-2026-41091等）；Linux内核曝Dirty Frag本地提权漏洞；工信部通报31款违规收集个人信息APP。",
+    "date": "2026-05-25"
+  },
+  {
     "slug": "daily-cybersecurity-briefing-2026-05-24",
     "title": "网络安全资讯日报 – 2026年5月24日",
     "tag": "每日情报",

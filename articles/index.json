@@ -1,5 +1,12 @@
 [
   {
+    "slug": "cybersecurity-daily-briefing-2026-05-28",
+    "title": "网络安全资讯日报 – 2026年5月28日",
+    "tag": "每日情报",
+    "excerpt": "7-Zip曝8.8分高危RCE漏洞；Apache PyFory反序列化漏洞可远程代码执行；银行业数据安全罚单半年超7000万；npm供应链攻击再袭AntV。",
+    "date": "2026-05-28"
+  },
+  {
     "slug": "cybersecurity-daily-brief-2026-05-27",
     "title": "网络安全资讯日报 – 2026年5月27日",
     "tag": "每日情报",

@@ -1,5 +1,12 @@
 [
   {
+    "slug": "cybersecurity-daily-briefing-2026-05-29",
+    "title": "网络安全资讯日报 – 2026年5月29日",
+    "tag": "每日情报",
+    "excerpt": "今日重点关注：7-Zip曝CVSS 8.8高危漏洞无需解压即可执行任意代码波及数亿设备；Linux内核曝PinTheft权限提升漏洞及CIFSwitch提权漏洞；微软BitLocker零日漏洞PoC已公开。",
+    "date": "2026-05-29"
+  },
+  {
     "slug": "cybersecurity-daily-briefing-2026-05-28",
     "title": "网络安全资讯日报 – 2026年5月28日",
     "tag": "每日情报",

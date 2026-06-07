@@ -775,5 +775,12 @@
         "tag": "漏洞分析",
         "excerpt": "CIFSwitch 是一个存在于 Linux 内核 CIFS/SMB 文件系统子系统中的本地权限提升漏洞。",
         "date": "2026-06-07"
+    },
+    {
+        "slug": "加载cobaltstrike-beacon-dll静默情况分析",
+        "title": "加载CobaltStrike Beacon DLL静默情况分析",
+        "tag": "代码分析",
+        "excerpt": "加载CobaltStrike Beacon DLL静默情况分析",
+        "date": "2026-06-07"
     }
 ]
